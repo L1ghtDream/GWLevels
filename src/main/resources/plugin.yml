@@ -1,0 +1,5 @@
+name: Gwlevels
+version: ${project.version}
+main: me.lightdream.gwlevels.Gwlevels
+api-version: 1.16
+authors: [ LightDream ]
