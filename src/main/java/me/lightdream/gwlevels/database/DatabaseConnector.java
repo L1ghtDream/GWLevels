@@ -34,19 +34,21 @@ public class DatabaseConnector {
                 if (con != null && !con.isClosed()) {
                     return;
                 }
-
+                loadStuff();
                 Class.forName("com.mysql.jdbc.Driver");
                 con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/?", user, pass);
                 st = con.createStatement();
                 st.executeUpdate("USE " + database);
-                Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[PinBlock SQL] " + ChatColor.GREEN + "DATABASE CONNECTED");
+                Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[GW SQL] " + ChatColor.GREEN + "DATABASE CONNECTED");
             }
         } catch (SQLException var3) {
-            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[PinBlock SQL] " + ChatColor.RED + "AN ERROR OCURED WHILE TRYING TO CONNECT TO DATABASE");
+            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[GW SQL] " + ChatColor.RED + "AN ERROR OCURED WHILE TRYING TO CONNECT TO DATABASE");
             Gwlevels.getPlugin().getServer().getPluginManager().disablePlugin(Gwlevels.getPlugin());
+            var3.printStackTrace();
         } catch (ClassNotFoundException var4) {
-            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[PinBlock SQL] " + ChatColor.RED + "JBDC DRIVER NOT FOUND! PLEASE INSTALL IT TO USE THIS PLUGIN");
+            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[GW SQL] " + ChatColor.RED + "JBDC DRIVER NOT FOUND! PLEASE INSTALL IT TO USE THIS PLUGIN");
             Gwlevels.getPlugin().getServer().getPluginManager().disablePlugin(Gwlevels.getPlugin());
+            var4.printStackTrace();
         }
 
     }
@@ -58,6 +60,8 @@ public class DatabaseConnector {
         user = config.getString("user");
         pass = config.getString("password");
         port = config.getInt("port");
+
+        levels = config.getString("levels");
     }
 
 }

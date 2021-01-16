@@ -26,8 +26,7 @@ public class EntityKillEvent implements Listener {
                 if (killer.hasPermission("gw.xp.vip"))
                     rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
 
-                Gwlevels.addPoints(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
-                System.out.println("Mob Kill " + base * baseMultiplier * rankMultiplier);
+                Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
             }
 
             else if (event.getEntity() instanceof Player)
@@ -41,8 +40,7 @@ public class EntityKillEvent implements Listener {
                 if (killer.hasPermission("gw.xp.vip"))
                     rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
 
-                Gwlevels.addPoints(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
-                System.out.println("Player Kill " + base * baseMultiplier * rankMultiplier);
+                Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
             }
         }
 
