@@ -19,36 +19,26 @@ public class DatabaseConnector {
     private static String pass;
     private static int port;
 
-    //Tables
-    /*
-    NAME | XP
-    ...  | ...
-     */
     public static String levels;
-
-
 
     public static void sqlSetup() {
         try {
-            synchronized(Gwlevels.getPlugin()) {
+            synchronized (Gwlevels.getPlugin()) {
                 if (con != null && !con.isClosed()) {
                     return;
                 }
                 loadStuff();
-                Class.forName("com.mysql.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/?", user, pass);
-                st = con.createStatement();
-                st.executeUpdate("USE " + database);
-                Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[GW SQL] " + ChatColor.GREEN + "DATABASE CONNECTED");
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection(String.format("jdbc:mysql://%s:%s/%s?autoReconnect=true&useSSL=false", host, port, database), user, pass);
+                Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[SQL] " + ChatColor.GREEN + "DATABASE CONNECTED");
             }
         } catch (SQLException var3) {
-            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[GW SQL] " + ChatColor.RED + "AN ERROR OCURED WHILE TRYING TO CONNECT TO DATABASE");
+            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[SQL] " + ChatColor.RED + "AN ERROR OCURED WHILE TRYING TO CONNECT TO DATABASE");
             Gwlevels.getPlugin().getServer().getPluginManager().disablePlugin(Gwlevels.getPlugin());
-            var3.printStackTrace();
         } catch (ClassNotFoundException var4) {
-            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[GW SQL] " + ChatColor.RED + "JBDC DRIVER NOT FOUND! PLEASE INSTALL IT TO USE THIS PLUGIN");
-            Gwlevels.getPlugin().getServer().getPluginManager().disablePlugin(Gwlevels.getPlugin());
             var4.printStackTrace();
+            Gwlevels.getPlugin().getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[SQL] " + ChatColor.RED + "JBDC DRIVER NOT FOUND! PLEASE INSTALL IT TO USE THIS PLUGIN");
+            Gwlevels.getPlugin().getServer().getPluginManager().disablePlugin(Gwlevels.getPlugin());
         }
 
     }

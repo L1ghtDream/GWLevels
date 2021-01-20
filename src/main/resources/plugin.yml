@@ -3,7 +3,7 @@ version: ${project.version}
 main: me.lightdream.gwlevels.Gwlevels
 api-version: 1.16
 authors: [ _LightDream ]
-depend: [PlaceholderAPI]
+depend: [PlaceholderAPI, Vault]
 commands:
   calculate:
     usage: /<command>
@@ -12,4 +12,6 @@ commands:
   dev:
     usage: /<command>
   admin:
+    usage: /<command>
+  gw:
     usage: /<command>

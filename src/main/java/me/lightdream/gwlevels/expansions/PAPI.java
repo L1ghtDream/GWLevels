@@ -22,7 +22,7 @@ public class PAPI extends PlaceholderExpansion {
 
     @Override
     public String getVersion(){
-        return "Beta 1";
+        return "Beta 0.2";
     }
 
     @Override
@@ -42,8 +42,9 @@ public class PAPI extends PlaceholderExpansion {
         if(identifier.equals("level_percent")){
             return Gwlevels.getLevelPercent(player.getName());
         }
-
-
+        if(identifier.equals("gw_rank_level")){
+            return Gwlevels.getLevelPercent(player.getName());
+        }
         return null;
     }
 }

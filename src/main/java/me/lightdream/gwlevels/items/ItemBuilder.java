@@ -1,5 +1,7 @@
 package me.lightdream.gwlevels.items;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -10,11 +12,10 @@ import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-//import org.yaml.snakeyaml.introspector.Property;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 public class ItemBuilder {
@@ -112,21 +113,31 @@ public class ItemBuilder {
         return this;
     }
 
-    //public ItemBuilder setLore(ArrayList<String> lore) {
-    //    ItemMeta meta = getItemMeta();
-    //    meta.setLore(lore);
-    //    setItemMeta(meta);
-    //    return this;
-    //}
+    public ItemBuilder setLore(ArrayList<String> lore) {
+        ItemMeta meta = getItemMeta();
+        meta.setLore(lore);
+        setItemMeta(meta);
+        return this;
+    }
 
-    //public ItemBuilder setLore (String lore) {
-    //    ArrayList<String> loreList = new ArrayList<>();
-    //    loreList.add(lore);
-    //    ItemMeta meta = getItemMeta();
-    //    meta.setLore(loreList);
-    //    setItemMeta(meta);
-    //    return this;
-    //}
+    public ItemBuilder setLore (String lore) {
+        ArrayList<String> loreList = new ArrayList<>();
+        loreList.add(lore);
+        ItemMeta meta = getItemMeta();
+        meta.setLore(loreList);
+        setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder setLore(String[] lore)
+    {
+        ArrayList<String> loreList = new ArrayList<>();
+        Collections.addAll(loreList, lore);
+        ItemMeta meta = getItemMeta();
+        meta.setLore(loreList);
+        setItemMeta(meta);
+        return this;
+    }
 
     public ItemBuilder addEnchant(Enchantment enchantment, int level) {
         ItemMeta meta = getItemMeta();
@@ -145,4 +156,6 @@ public class ItemBuilder {
     public ItemStack build() {
         return stack;
     }
+
+
 }

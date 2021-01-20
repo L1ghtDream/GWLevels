@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public class EntityKillEvent implements Listener {
 
     @EventHandler
-    public void onEntityKill(EntityDeathEvent event)
+    private void onEntityKill(EntityDeathEvent event)
     {
         if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getPlayer() != null) {
 
