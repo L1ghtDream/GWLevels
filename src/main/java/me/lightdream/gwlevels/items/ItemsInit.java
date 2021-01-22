@@ -2,7 +2,6 @@ package me.lightdream.gwlevels.items;
 
 import me.lightdream.gwlevels.Gwlevels;
 import me.lightdream.gwlevels.Utils;
-import me.lightdream.gwlevels.managers.TagManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -125,51 +124,6 @@ public class ItemsInit {
         lore.add(Utils.color("&cIN CURAND"));
 
         return new ItemBuilder( Material.PLAYER_HEAD ).setDisplayName(Utils.color("&e&lConcursuri")).setProfileHeader( "2d8a0728-9257-4072-bd83-6b60837d77af", "eyJ0aW1lc3RhbXAiOjE1NjQ5MzQ3OTY5MjgsInByb2ZpbGVJZCI6IjkwMmY3YzRhYmM3YTQwODk4OWFhMzgyYzNiYTIxZjcyIiwicHJvZmlsZU5hbWUiOiJLVFhmb3JnZW9tYW0iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzc3YzJiMGUzZjNmN2VhNWRlYzgzZTQ0NTEyYjRlNDUyYWY0NmNlNGQ5YmZiMzk1ODRiOTMzNWZmM2QzY2QzNWIifX19", "n7XqOSSVoSIfIiieddwPpx3Tx7vHvwPhOzGmSKEHXzj9LJlXxFGN3Vjohgx0FVYWol6T+AattHpIA+riivigLDqePU0pFVlX7azoMuvmTbic013iXidcjCb6Wx5/tevcrOva80gSP2LzzA2lSh6EHOxmnfdsIZrVy5LQrDZ/H3YsTlmCZ7mCa8n+TwTJ0CyR0hIpYY9xXwhbpQKRV1GLFYw78aOVIWIS3IfIWmYb4gXPc+Y8I4tfV7l0qTEvo8+q8LEFiEGiuEI4Et/YOKNV1rA8cKBcJQkQRf2uVyoKeIZLBSNfCfPmxhgubiq6TAXtKrklxf5DR9bhnPkxOOtE6Dq+P6E6O+gE81qB5yNup4UwAfbWWXj+XPJxQUEh8qZ92ZE1yU1rHZ0YDREDHl6dNnHUUf9DNBiEvn52dParq01v2U4nlE1KNDs6Yo6seyyWIW2bS9mTvckzqBcyNfjzdCQ6e+GL9B0HHDICxuzpI7B2OsI0zSZS/L+APii0AAr+INTDuSez4V+fLcZwIRN/nt+2KPCaYxAT5IBeyTetFU78aP7YmQz30AIH+es6V52IQF+2rAETMQghb8xEIp7TUiqU04FhYvlSZZWjueuELjX2KkKL6wv9VC95x6o8ABCUWEECOtyHhbAYqLY5GpTMeGR/vEvPl5mksisGeVPHyCs=" ).setLore(lore).build();
-    }
-
-    public static ItemStack getBedWarsTag(String player)
-    {
-        ArrayList<String> lore = new ArrayList<>();
-
-        lore.add("");
-        //lore.add(Utils.color("&fRank: " + TagManager.getBedWarsRank(player)));
-
-        ItemStack output = new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lBedWars &e&lTAG")).setLore(lore).build();
-        ItemMeta meta = output.getItemMeta();
-        meta.getPersistentDataContainer().set(Gwlevels.bedwarsTagsKey, PersistentDataType.STRING, "bedwarsTags");
-        output.setItemMeta(meta);
-
-        return output;
-    }
-
-    public static ItemStack getParkourTag(String player)
-    {
-        ArrayList<String> lore = new ArrayList<>();
-
-        lore.add("");
-        //lore.add(Utils.color("&fRank: " + TagManager.getParkourRank(player)));
-
-        ItemStack output = new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lParkour &e&lTAG")).setLore(lore).build();
-        ItemMeta meta = output.getItemMeta();
-        meta.getPersistentDataContainer().set(Gwlevels.parkourTagsKey, PersistentDataType.STRING, "parkourTags");
-        output.setItemMeta(meta);
-
-        return output;
-    }
-
-    public static ItemStack getLevelTag(String player)
-    {
-        ArrayList<String> lore = new ArrayList<>();
-
-        lore.add("");
-        lore.add(Utils.color("&fRank: " + TagManager.getLevelRank(player)));
-
-        ItemStack output = new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lLevel &e&lTAG")).setLore(lore).build();
-        ItemMeta meta = output.getItemMeta();
-        meta.getPersistentDataContainer().set(Gwlevels.levelTagsKey, PersistentDataType.STRING, "levelTags");
-        output.setItemMeta(meta);
-
-        return output;
     }
 
 }

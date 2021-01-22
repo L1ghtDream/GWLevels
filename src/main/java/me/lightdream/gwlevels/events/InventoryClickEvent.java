@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class InventoryClickEvent  implements Listener {
 
-    List<String> denyedInv = Arrays.asList("Level", "HELP!", "Level TOP", "Tag Manager");
+    List<String> denyedInv = Arrays.asList("Level", "HELP!", "Level TOP");
 
     @EventHandler
     private void onInventoryClick(org.bukkit.event.inventory.InventoryClickEvent event) {
@@ -68,13 +68,7 @@ public class InventoryClickEvent  implements Listener {
             {
                 event.getWhoClicked().openInventory(DataHolder.getTopLevelInventory(event.getWhoClicked().getName()));
             }
-            else if (dataContainer.has(Gwlevels.levelTagsKey, PersistentDataType.STRING))
-            {
-                String tag = event.getCurrentItem().getItemMeta().getLore().get(1).replace("Rank:", "");
-                Gwlevels.getChat().setPlayerSuffix((Player) event.getWhoClicked(), Utils.color(tag));
-                event.getWhoClicked().closeInventory();
-                Gwlevels.setTagGlobally(event.getWhoClicked().getName(), event.getCurrentItem().getItemMeta().getDisplayName().replace("§b§l", "").replace(" §e§lTAG", ""));
-            }
+
 
             event.setCancelled(true);
         }

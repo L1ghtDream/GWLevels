@@ -5,13 +5,11 @@ api-version: 1.16
 authors: [ _LightDream ]
 depend: [PlaceholderAPI, Vault]
 commands:
-  calculate:
+  dev-main:
     usage: /<command>
-  level:
+  gwadmin:
     usage: /<command>
-  dev:
+  gwlevel:
     usage: /<command>
-  admin:
-    usage: /<command>
-  gw:
+  gwtop:
     usage: /<command>

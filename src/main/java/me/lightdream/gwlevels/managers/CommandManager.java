@@ -17,24 +17,12 @@ public class CommandManager implements CommandExecutor {
 
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, String label, String[] args) {
-        if(label.equalsIgnoreCase("dev"))
-        {
+
+        if(label.equalsIgnoreCase("dev-main")) {
             Player player = (Player) sender;
             sender.sendMessage(Gwlevels.VERSION);
-
-            //player.openInventory(Gwlevels.getTagManagerInventory(player));
-            System.out.println(player.getName());
-            Gwlevels.getRankLevel(player.getName());
-            //Gwlevels.getChat().setPlayerSuffix(player, Utils.color(" &c[DEVELOPING]"));
-            //System.out.println(Gwlevels.getChat().getPlayerSuffix(player));
-
-            System.out.println(TagManager.getLevelRank(player.getName()));
-
-           }
-
-        //Moving to /gw admin
-        if(label.equalsIgnoreCase("admin"))
-        {
+        }
+        else if(label.equalsIgnoreCase("gwadmin")) {
             if(sender.hasPermission("gw.admin"))
             {
                 if(args.length == 0)
@@ -128,46 +116,29 @@ public class CommandManager implements CommandExecutor {
                 }
             }
         }
+        else if(label.equalsIgnoreCase("gwlevel")) {
+            if (args.length == 0) {
+                if (sender instanceof Player)
+                    ((Player) sender).openInventory(Objects.requireNonNull(Gwlevels.getLevelInventory((Player) sender, 0)));
+                else
+                    sender.sendMessage("Only players can use this command");
+            } else if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("help")) {
+                    if (sender instanceof Player)
+                        ((Player) sender).openInventory(Gwlevels.getHelpInventory((Player) sender));
+                    else
+                        sender.sendMessage("Only players can use this command");
 
-        if(label.equalsIgnoreCase("gw"))
-        {
-            if(args.length == 0)
-            {
-                sender.sendMessage(Utils.color("&f/admin setLevel [nume]\n/admin addLevel [nume]\n/admin setXP [nume]\n/admin addXP [nume]\n/gw level\n/gw level top\n/gw level help"));
-            }
-            else
-            {
-                if(args[0].equalsIgnoreCase("level"))
-                {
-                    if(args.length == 1)
-                    {
-                        if(sender instanceof Player)
-                            ((Player) sender).openInventory(Objects.requireNonNull(Gwlevels.getLevelInventory((Player) sender, 0)));
-                        else
-                            sender.sendMessage("Only players can use this command");
-                    }
-                    else if(args[1].equalsIgnoreCase("top"))
-                    {
-                        if(sender instanceof Player)
-                            ((Player) sender).openInventory(DataHolder.getTopLevelInventory(sender.getName()));
-                        else
-                            sender.sendMessage("Only players can use this command");
-                    }
-                    else if(args[1].equalsIgnoreCase("help"))
-                    {
-                        if(sender instanceof Player)
-                            ((Player) sender).openInventory(Gwlevels.getHelpInventory((Player) sender));
-                        else
-                            sender.sendMessage("Only players can use this command");
-                    }
                 }
-                else if(args[0].equalsIgnoreCase("tag"))
-                {
-                    ((Player)sender).openInventory(Gwlevels.getTagManagerInventory((Player) sender));
-                }
-
             }
         }
+        else if(label.equalsIgnoreCase("gwtop")) {
+            if(sender instanceof Player)
+                ((Player) sender).openInventory(DataHolder.getTopLevelInventory(sender.getName()));
+            else
+                sender.sendMessage("Only players can use this command");
+        }
+
         return true;
     }
 

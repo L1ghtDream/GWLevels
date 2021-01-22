@@ -8,7 +8,6 @@ import me.lightdream.gwlevels.exceptions.NoUserFound;
 import me.lightdream.gwlevels.expansions.PAPI;
 import me.lightdream.gwlevels.items.ItemsInit;
 import me.lightdream.gwlevels.managers.CommandManager;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -16,7 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.PreparedStatement;
@@ -135,8 +133,7 @@ public final class Gwlevels extends JavaPlugin {
 
 
     private static Gwlevels plugin;
-    private static Chat chat = null;
-    public static final String VERSION = "Beta 0.2 (TagManager) Build 52";
+    public static final String VERSION = "Beta 0.4 (GP) Build 1";
 
 
     //1 = light blue
@@ -153,18 +150,12 @@ public final class Gwlevels extends JavaPlugin {
     public static final List<Integer> helpInv_color1 = Arrays.asList(0,2,3,5,6,8,9,11,12,14,15,17,18,20,21,23,24,26);
     public static final List<Integer> helpInv_color2 = Arrays.asList(1,4,7,19,22,25);
 
-    public static final List<Integer> tagManagerInv_color1 = Arrays.asList(0,1,2,6,7,8,9,10,11,15,16,17,18,26,27,31,35,36,40,44,45,46,47,48,50,51,52,53);
-    public static final List<Integer> tagManagerInv_color2 = Arrays.asList(3,4,5,12,14,19,20,21,22,23,24,25,28,30,32,34,37,38,39,41,42,43);
-
     public static NamespacedKey rewardKey;
     public static NamespacedKey nextKey;
     public static NamespacedKey backKey;
     public static NamespacedKey helpKey;
     public static NamespacedKey viewTopKey;
-    public static NamespacedKey bedwarsTagsKey;
-    public static NamespacedKey parkourTagsKey;
-    public static NamespacedKey levelTagsKey;
-    public static NamespacedKey resetTagsKey;
+
 
 
     @Override
@@ -191,10 +182,6 @@ public final class Gwlevels extends JavaPlugin {
         backKey = new NamespacedKey(plugin,"back");
         helpKey = new NamespacedKey(plugin,"help");
         viewTopKey = new NamespacedKey(plugin,"viewtop");
-        bedwarsTagsKey = new NamespacedKey(plugin,"bedwarsTags");
-        parkourTagsKey = new NamespacedKey(plugin,"parkourTags");
-        levelTagsKey = new NamespacedKey(plugin,"levelTags");
-        resetTagsKey = new NamespacedKey(plugin,"resetTags");
 
         getServer().getConsoleSender().sendMessage("\n  _____       _             __         _     ______                                           \n |_   _|     (_)           [  |       / |_  |_   _ `.                                         \n   | |       __     .--./)  | |--.   `| |-'   | | `. \\  _ .--.   .---.   ,--.    _ .--..--.   \n   | |   _  [  |   / /'`\\;  | .-. |   | |     | |  | | [ `/'`\\] / /__\\\\ `'_\\ :  [ `.-. .-. |  \n  _| |__/ |  | |   \\ \\._//  | | | |   | |,   _| |_.' /  | |     | \\__., // | |,  | | | | | |  \n |________| [___]  .',__`  [___]|__]  \\__/  |______.'  [___]     '.__.' \\'-;__/ [___||__||__] \n                  ( ( __))                                                                    ");
 
@@ -204,13 +191,12 @@ public final class Gwlevels extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new InventoryClickEvent(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerJoinEvent(), this);
 
-        Objects.requireNonNull(this.getCommand("dev")).setExecutor(new CommandManager());
-        Objects.requireNonNull(this.getCommand("admin")).setExecutor(new CommandManager());
-        Objects.requireNonNull(this.getCommand("gw")).setExecutor(new CommandManager());
+        Objects.requireNonNull(this.getCommand("dev-main")).setExecutor(new CommandManager());
+        Objects.requireNonNull(this.getCommand("gwadmin")).setExecutor(new CommandManager());
+        Objects.requireNonNull(this.getCommand("gwlevel")).setExecutor(new CommandManager());
+        Objects.requireNonNull(this.getCommand("gwtop")).setExecutor(new CommandManager());
 
         DataHolder.updateData();
-
-        setupChat();
     }
 
     @Override
@@ -221,10 +207,6 @@ public final class Gwlevels extends JavaPlugin {
 
     // ------------------------------ SETUP ------------------------------
 
-    private void setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = rsp.getProvider();
-    }
 
 
     // ------------------------------ Getters ------------------------------
@@ -378,22 +360,6 @@ public final class Gwlevels extends JavaPlugin {
         return helpInv;
     }
 
-    public static Inventory getTagManagerInventory(Player player)
-    {
-        Inventory tagManagerInv = Bukkit.createInventory(null, 54, "Tag Manager");
-
-        for(int i : tagManagerInv_color1)
-            tagManagerInv.setItem(i, ItemsInit.getPaneColor1());
-        for(int i : tagManagerInv_color2)
-            tagManagerInv.setItem(i, ItemsInit.getPaneColor2());
-
-        tagManagerInv.setItem(13, ItemsInit.getBedWarsTag(player.getName()));
-        tagManagerInv.setItem(29, ItemsInit.getParkourTag(player.getName()));
-        tagManagerInv.setItem(33, ItemsInit.getLevelTag(player.getName()));
-
-        return tagManagerInv;
-    }
-
     public static String getLevelFormated(String player)
     {
         String icon = "█";
@@ -413,10 +379,6 @@ public final class Gwlevels extends JavaPlugin {
 
     public static Gwlevels getPlugin(){
         return plugin;
-    }
-
-    public static Chat getChat(){
-        return chat;
     }
 
 
@@ -559,20 +521,8 @@ public final class Gwlevels extends JavaPlugin {
     }
 
 
-    //Tags
-    public static String getRankBedWars(String player) throws NoUserFound
-    {
-        //TODO: Create the child plugin fro BedWars
-        //TODO: First create the database
-        return "%bw_player_rank%";
-    }
 
-    public static String getRankParkour(String player) throws NoUserFound
-    {
-        //TODO: Create the child plugin fro BedWars
-        //TODO: First create the database
-        return "%parkour_player_rank%";
-    }
+
 
     public static int getRankLevel(String player) throws NoUserFound
     {
@@ -587,63 +537,6 @@ public final class Gwlevels extends JavaPlugin {
         }
     }
 
-    public static int getTotalRanksLevel()
-    {
-        try {
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.levels);
-            ResultSet rs = st.executeQuery();
-            if (rs.next())
-                return rs.getInt("COUNT(*)");
-            return 0;
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
-    }
-
-    public static void setTagGlobally(String player, String tag)
-    {
-        try {
-                PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.tags + " WHERE NAME = '" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next())
-            {
-                if (rs.getInt("COUNT(*)") == 1)
-                    st = DatabaseConnector.con.prepareStatement("UPDATE " + DatabaseConnector.tags + " SET TAG='" + tag + "' WHERE NAME='" + player + "'");
-                else
-                    st = DatabaseConnector.con.prepareStatement("INSERT INTO " + DatabaseConnector.tags + " VALUES('" + player + "', '" + tag + "')");
-
-                st.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static String getTagGlobally(String player)
-    {
-        try {
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.tags + " WHERE NAME = '" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next())
-            {
-                if (rs.getInt("COUNT(*)") == 1)
-                {
-                    st = DatabaseConnector.con.prepareStatement("SELECT TAG FROM " + DatabaseConnector.tags + " WHERE NAME = '" + player + "'");
-                    rs = st.executeQuery();
-                    if (rs.next())
-                    {
-                        String output = rs.getString("TAG");
-                        System.out.println(output);
-                        return output;
-                    }
-                }
-            }
-            return "";
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 
 
     // ------------------------------ Calculus ------------------------------
