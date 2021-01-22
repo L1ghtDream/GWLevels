@@ -15,7 +15,7 @@ public class DataHolder
     {
         Bukkit.getScheduler().runTaskTimer(Gwlevels.getPlugin(), () -> {
             topLevelInventory = Gwlevels.getTopLevelInventory();
-        }, 0L, 2000L);
+        }, 0L, 6000L);
     }
 
 
