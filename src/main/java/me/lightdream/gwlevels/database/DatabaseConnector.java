@@ -20,6 +20,7 @@ public class DatabaseConnector {
     private static int port;
 
     public static String levels;
+    public static String tags;
 
     public static void sqlSetup() {
         try {
@@ -52,6 +53,7 @@ public class DatabaseConnector {
         port = config.getInt("port");
 
         levels = config.getString("levels");
+        tags = config.getString("tags");
     }
 
 }

@@ -36,8 +36,9 @@ public class TagManager {
 
     public static String getBedWarsRank (int index, int total)
     {
-        System.out.println((int)Math.ceil((100.0-(index * 1.0/total*250.0))/100.0*BedWarsTags.size()));
-        return BedWarsTags.get((int)Math.ceil((100.0-(index * 1.0/total*250.0))/100.0*BedWarsTags.size()));
+        //System.out.println((int)Math.ceil((100.0-(index * 1.0/total*250.0))/100.0*BedWarsTags.size()));
+        //return BedWarsTags.get((int)Math.ceil((100.0-(index * 1.0/total*250.0))/100.0*BedWarsTags.size()));
+        return ParkourTags.get(index - 1);
     }
 
     public static String getParkourRank (int index, int total)
@@ -47,11 +48,21 @@ public class TagManager {
 
     public static String getLevelRank (String player)
     {
-        int index = Gwlevels.getRankLevel(player);
-        int total = Gwlevels.getTotalRanksLevel();
+        return LevelTags.get((int)Math.ceil((100.0-(Gwlevels.getRankLevel(player) * 1.0/Gwlevels.getTotalRanksLevel()*100.0))/100.0*LevelTags.size()));
+    }
 
-        System.out.println((int)Math.ceil((100.0-(index * 1.0/total*250.0))/100.0*LevelTags.size()));
-        return LevelTags.get((int)Math.ceil((100.0-(index * 1.0/total*250.0))/100.0*LevelTags.size()));
+    public static String getRank(String type, String player)
+    {
+        switch (type)
+        {
+            case "Level":
+                return getLevelRank(player);
+            case "BedWars":
+                break;
+            case "Parkour":
+                break;
+        }
+        return "";
     }
 
 }

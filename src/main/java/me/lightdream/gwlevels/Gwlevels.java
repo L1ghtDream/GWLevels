@@ -3,6 +3,7 @@ package me.lightdream.gwlevels;
 import me.lightdream.gwlevels.database.DatabaseConnector;
 import me.lightdream.gwlevels.events.EntityKillEvent;
 import me.lightdream.gwlevels.events.InventoryClickEvent;
+import me.lightdream.gwlevels.events.PlayerJoinEvent;
 import me.lightdream.gwlevels.exceptions.NoUserFound;
 import me.lightdream.gwlevels.expansions.PAPI;
 import me.lightdream.gwlevels.items.ItemsInit;
@@ -135,7 +136,7 @@ public final class Gwlevels extends JavaPlugin {
 
     private static Gwlevels plugin;
     private static Chat chat = null;
-    public static final String VERSION = "Beta 0.2 (TagManager) Build 24";
+    public static final String VERSION = "Beta 0.2 (TagManager) Build 52";
 
 
     //1 = light blue
@@ -195,15 +196,14 @@ public final class Gwlevels extends JavaPlugin {
         levelTagsKey = new NamespacedKey(plugin,"levelTags");
         resetTagsKey = new NamespacedKey(plugin,"resetTags");
 
-        getServer().getConsoleSender().sendMessage("  _____       _             __         _     ______                                           \n |_   _|     (_)           [  |       / |_  |_   _ `.                                         \n   | |       __     .--./)  | |--.   `| |-'   | | `. \\  _ .--.   .---.   ,--.    _ .--..--.   \n   | |   _  [  |   / /'`\\;  | .-. |   | |     | |  | | [ `/'`\\] / /__\\\\ `'_\\ :  [ `.-. .-. |  \n  _| |__/ |  | |   \\ \\._//  | | | |   | |,   _| |_.' /  | |     | \\__., // | |,  | | | | | |  \n |________| [___]  .',__`  [___]|__]  \\__/  |______.'  [___]     '.__.' \\'-;__/ [___||__||__] \n                  ( ( __))                                                                    ");
+        getServer().getConsoleSender().sendMessage("\n  _____       _             __         _     ______                                           \n |_   _|     (_)           [  |       / |_  |_   _ `.                                         \n   | |       __     .--./)  | |--.   `| |-'   | | `. \\  _ .--.   .---.   ,--.    _ .--..--.   \n   | |   _  [  |   / /'`\\;  | .-. |   | |     | |  | | [ `/'`\\] / /__\\\\ `'_\\ :  [ `.-. .-. |  \n  _| |__/ |  | |   \\ \\._//  | | | |   | |,   _| |_.' /  | |     | \\__., // | |,  | | | | | |  \n |________| [___]  .',__`  [___]|__]  \\__/  |______.'  [___]     '.__.' \\'-;__/ [___||__||__] \n                  ( ( __))                                                                    ");
 
         DatabaseConnector.sqlSetup();
 
         this.getServer().getPluginManager().registerEvents(new EntityKillEvent(), this);
         this.getServer().getPluginManager().registerEvents(new InventoryClickEvent(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerJoinEvent(), this);
 
-        //Objects.requireNonNull(this.getCommand("calculate")).setExecutor(new CommandManager());
-        //Objects.requireNonNull(this.getCommand("level")).setExecutor(new CommandManager());
         Objects.requireNonNull(this.getCommand("dev")).setExecutor(new CommandManager());
         Objects.requireNonNull(this.getCommand("admin")).setExecutor(new CommandManager());
         Objects.requireNonNull(this.getCommand("gw")).setExecutor(new CommandManager());
@@ -380,7 +380,7 @@ public final class Gwlevels extends JavaPlugin {
 
     public static Inventory getTagManagerInventory(Player player)
     {
-        Inventory tagManagerInv = Bukkit.createInventory(null, 54, "HELP!");
+        Inventory tagManagerInv = Bukkit.createInventory(null, 54, "Tag Manager");
 
         for(int i : tagManagerInv_color1)
             tagManagerInv.setItem(i, ItemsInit.getPaneColor1());
@@ -562,11 +562,15 @@ public final class Gwlevels extends JavaPlugin {
     //Tags
     public static String getRankBedWars(String player) throws NoUserFound
     {
+        //TODO: Create the child plugin fro BedWars
+        //TODO: First create the database
         return "%bw_player_rank%";
     }
 
     public static String getRankParkour(String player) throws NoUserFound
     {
+        //TODO: Create the child plugin fro BedWars
+        //TODO: First create the database
         return "%parkour_player_rank%";
     }
 
@@ -586,7 +590,7 @@ public final class Gwlevels extends JavaPlugin {
     public static int getTotalRanksLevel()
     {
         try {
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) WHERE FROM " + DatabaseConnector.levels);
+            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.levels);
             ResultSet rs = st.executeQuery();
             if (rs.next())
                 return rs.getInt("COUNT(*)");
@@ -594,6 +598,51 @@ public final class Gwlevels extends JavaPlugin {
         } catch (SQLException e) {
             throw new NoUserFound();
         }
+    }
+
+    public static void setTagGlobally(String player, String tag)
+    {
+        try {
+                PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.tags + " WHERE NAME = '" + player + "'");
+            ResultSet rs = st.executeQuery();
+            if (rs.next())
+            {
+                if (rs.getInt("COUNT(*)") == 1)
+                    st = DatabaseConnector.con.prepareStatement("UPDATE " + DatabaseConnector.tags + " SET TAG='" + tag + "' WHERE NAME='" + player + "'");
+                else
+                    st = DatabaseConnector.con.prepareStatement("INSERT INTO " + DatabaseConnector.tags + " VALUES('" + player + "', '" + tag + "')");
+
+                st.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getTagGlobally(String player)
+    {
+        try {
+            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.tags + " WHERE NAME = '" + player + "'");
+            ResultSet rs = st.executeQuery();
+            if (rs.next())
+            {
+                if (rs.getInt("COUNT(*)") == 1)
+                {
+                    st = DatabaseConnector.con.prepareStatement("SELECT TAG FROM " + DatabaseConnector.tags + " WHERE NAME = '" + player + "'");
+                    rs = st.executeQuery();
+                    if (rs.next())
+                    {
+                        String output = rs.getString("TAG");
+                        System.out.println(output);
+                        return output;
+                    }
+                }
+            }
+            return "";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 

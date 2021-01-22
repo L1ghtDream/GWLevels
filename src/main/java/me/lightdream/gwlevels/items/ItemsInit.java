@@ -2,6 +2,7 @@ package me.lightdream.gwlevels.items;
 
 import me.lightdream.gwlevels.Gwlevels;
 import me.lightdream.gwlevels.Utils;
+import me.lightdream.gwlevels.managers.TagManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -131,9 +132,14 @@ public class ItemsInit {
         ArrayList<String> lore = new ArrayList<>();
 
         lore.add("");
-        lore.add(Utils.color("&fRank: " + Gwlevels.getRankBedWars(player)));
+        //lore.add(Utils.color("&fRank: " + TagManager.getBedWarsRank(player)));
 
-        return new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lBedWars &e&lTAG")).setLore(lore).build();
+        ItemStack output = new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lBedWars &e&lTAG")).setLore(lore).build();
+        ItemMeta meta = output.getItemMeta();
+        meta.getPersistentDataContainer().set(Gwlevels.bedwarsTagsKey, PersistentDataType.STRING, "bedwarsTags");
+        output.setItemMeta(meta);
+
+        return output;
     }
 
     public static ItemStack getParkourTag(String player)
@@ -141,9 +147,14 @@ public class ItemsInit {
         ArrayList<String> lore = new ArrayList<>();
 
         lore.add("");
-        lore.add(Utils.color("&fRank: " + Gwlevels.getRankParkour(player)));
+        //lore.add(Utils.color("&fRank: " + TagManager.getParkourRank(player)));
 
-        return new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lParkour &e&lTAG")).setLore(lore).build();
+        ItemStack output = new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lParkour &e&lTAG")).setLore(lore).build();
+        ItemMeta meta = output.getItemMeta();
+        meta.getPersistentDataContainer().set(Gwlevels.parkourTagsKey, PersistentDataType.STRING, "parkourTags");
+        output.setItemMeta(meta);
+
+        return output;
     }
 
     public static ItemStack getLevelTag(String player)
@@ -151,9 +162,14 @@ public class ItemsInit {
         ArrayList<String> lore = new ArrayList<>();
 
         lore.add("");
-        lore.add(Utils.color("&fRank: " + Gwlevels.getRankLevel(player)));
+        lore.add(Utils.color("&fRank: " + TagManager.getLevelRank(player)));
 
-        return new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lLevel &e&lTAG")).setLore(lore).build();
+        ItemStack output = new ItemBuilder(Material.NAME_TAG).setDisplayName(Utils.color("&b&lLevel &e&lTAG")).setLore(lore).build();
+        ItemMeta meta = output.getItemMeta();
+        meta.getPersistentDataContainer().set(Gwlevels.levelTagsKey, PersistentDataType.STRING, "levelTags");
+        output.setItemMeta(meta);
+
+        return output;
     }
 
 }

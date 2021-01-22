@@ -19,14 +19,17 @@ import java.util.Objects;
 
 public class InventoryClickEvent  implements Listener {
 
-    List<String> denyedInv = Arrays.asList("Level", "HELP!", "Level TOP");
+    List<String> denyedInv = Arrays.asList("Level", "HELP!", "Level TOP", "Tag Manager");
 
     @EventHandler
     private void onInventoryClick(org.bukkit.event.inventory.InventoryClickEvent event) {
         if (denyedInv.contains(event.getView().getTitle())) {
-            int page = (Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(event.getInventory().getItem(10)).getItemMeta()).getDisplayName().replace("§b§lLevel §e", "")) + 14) / 15 - 1;
+            int page = 0;
+            if(event.getView().getTitle().equals("Level"))
+                page = (Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(event.getInventory().getItem(10)).getItemMeta()).getDisplayName().replace("§b§lLevel §e", "")) + 14) / 15 - 1;
             PersistentDataContainer dataContainer = Objects.requireNonNull(Objects.requireNonNull(event.getCurrentItem()).getItemMeta()).getPersistentDataContainer();
-            if (dataContainer.has(Gwlevels.rewardKey, PersistentDataType.STRING)) {
+            if (dataContainer.has(Gwlevels.rewardKey, PersistentDataType.STRING))
+            {
                 Player player = (Player) event.getWhoClicked();
 
                 int level = Integer.parseInt(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getDisplayName().replace("§b§lLevel §e", ""));
@@ -43,19 +46,36 @@ public class InventoryClickEvent  implements Listener {
                 } else {
                     event.getWhoClicked().sendMessage("Nu ai nivelul necesar pentru a lua aceasta recompensa");
                 }
-            } else if (dataContainer.has(Gwlevels.backKey, PersistentDataType.STRING)) {
+            }
+            else if
+            (dataContainer.has(Gwlevels.backKey, PersistentDataType.STRING))
+            {
                 Inventory inv = Gwlevels.getLevelInventory((Player) event.getWhoClicked(), (page - 1));
                 if (inv != null)
                     event.getWhoClicked().openInventory(inv);
-            } else if (dataContainer.has(Gwlevels.nextKey, PersistentDataType.STRING)) {
+            }
+            else if (dataContainer.has(Gwlevels.nextKey, PersistentDataType.STRING))
+            {
                 Inventory inv = Gwlevels.getLevelInventory((Player) event.getWhoClicked(), (page + 1));
                 if (inv != null)
                     event.getWhoClicked().openInventory(inv);
-            } else if (dataContainer.has(Gwlevels.helpKey, PersistentDataType.STRING)) {
+            }
+            else if (dataContainer.has(Gwlevels.helpKey, PersistentDataType.STRING))
+            {
                 event.getWhoClicked().openInventory(Gwlevels.getHelpInventory((Player) event.getWhoClicked()));
-            } else if (dataContainer.has(Gwlevels.viewTopKey, PersistentDataType.STRING)) {
+            }
+            else if (dataContainer.has(Gwlevels.viewTopKey, PersistentDataType.STRING))
+            {
                 event.getWhoClicked().openInventory(DataHolder.getTopLevelInventory(event.getWhoClicked().getName()));
             }
+            else if (dataContainer.has(Gwlevels.levelTagsKey, PersistentDataType.STRING))
+            {
+                String tag = event.getCurrentItem().getItemMeta().getLore().get(1).replace("Rank:", "");
+                Gwlevels.getChat().setPlayerSuffix((Player) event.getWhoClicked(), Utils.color(tag));
+                event.getWhoClicked().closeInventory();
+                Gwlevels.setTagGlobally(event.getWhoClicked().getName(), event.getCurrentItem().getItemMeta().getDisplayName().replace("§b§l", "").replace(" §e§lTAG", ""));
+            }
+
             event.setCancelled(true);
         }
     }

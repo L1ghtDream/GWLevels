@@ -1,8 +1,11 @@
 package me.lightdream.gwlevels;
 
 import me.lightdream.gwlevels.items.ItemsInit;
+import me.lightdream.gwlevels.managers.TagManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class DataHolder
 {
@@ -14,8 +17,9 @@ public class DataHolder
     {
         Bukkit.getScheduler().runTaskTimer(Gwlevels.getPlugin(), () -> {
             topLevelInventory = Gwlevels.getTopLevelInventory();
-            //Update tags for online players
-        }, 0L, 1000L);
+            for(Player player : Bukkit.getServer().getOnlinePlayers())
+                Gwlevels.getChat().setPlayerSuffix(player, Utils.color(TagManager.getRank(Gwlevels.getTagGlobally(player.getName()), player.getName())));
+        }, 0L, 2000L);
     }
 
 
@@ -23,8 +27,10 @@ public class DataHolder
     public static Inventory getTopLevelInventory(String player){
         Inventory output = topLevelInventory;
 
-        topLevelInventory.setItem(19, ItemsInit.getPlayerInfoItem(player));
-        topLevelInventory.setItem(28, ItemsInit.getPlayerInfoItem(player));
+        ItemStack playerInfo = ItemsInit.getPlayerInfoItem(player);
+
+        topLevelInventory.setItem(19, playerInfo);
+        topLevelInventory.setItem(28, playerInfo);
 
         return output;
     }
