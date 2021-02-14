@@ -3,6 +3,7 @@ package me.lightdream.gwlevels.expansions;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.lightdream.gwlevels.Gwlevels;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class PAPI extends PlaceholderExpansion {
     @Override
@@ -11,16 +12,19 @@ public class PAPI extends PlaceholderExpansion {
     }
 
     @Override
+    @NotNull
     public String getAuthor(){
         return "_LightDream";
     }
 
     @Override
+    @NotNull
     public String getIdentifier(){
         return "gwlevels";
     }
 
     @Override
+    @NotNull
     public String getVersion(){
         return "Beta 0.2";
     }

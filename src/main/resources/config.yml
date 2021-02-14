@@ -4,12 +4,3 @@ rank-multiplier: 2.5
 mob-kill-xp: 10
 player-kill-xp: 100
 
-host: "127.0.0.1"
-database: "gwlevels"
-user: "root"
-password: "mypass"
-port: 3306
-levels: "levels"
-tags: "tags"
-
-

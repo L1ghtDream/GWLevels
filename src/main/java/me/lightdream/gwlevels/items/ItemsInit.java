@@ -12,18 +12,15 @@ import java.util.ArrayList;
 
 public class ItemsInit {
 
-    public static ItemStack getPaneColor1()
-    {
+    public static ItemStack getPaneColor1() {
         return new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setDisplayName(" ").build();
     }
 
-    public static ItemStack getPaneColor2()
-    {
+    public static ItemStack getPaneColor2() {
         return new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE).setDisplayName(" ").build();
     }
 
-    public static ItemStack getLevelRewardUnclaimed(String name, int level)
-    {
+    public static ItemStack getLevelRewardUnclaimed(String name, int level) {
         ItemStack output = new ItemBuilder(Material.CHEST_MINECART).setDisplayName(Utils.color(name)).setLore(Utils.color(Gwlevels.rewards.get(level).get(0)).split("%newline%")).build();
         ItemMeta meta = output.getItemMeta();
         assert meta != null;
@@ -32,13 +29,11 @@ public class ItemsInit {
         return output;
     }
 
-    public static ItemStack getLevelRewardClaimed(String name, int level)
-    {
+    public static ItemStack getLevelRewardClaimed(String name, int level) {
         return new ItemBuilder(Material.MINECART).setDisplayName(Utils.color(name)).setLore(Utils.color(Gwlevels.rewards.get(level).get(0)).split("%newline%")).build();
     }
 
-    public static ItemStack getHead(String name)
-    {
+    public static ItemStack getHead(String name) {
         switch (name)
         {
             case "arrowLeft":
@@ -53,18 +48,17 @@ public class ItemsInit {
         return null;
     }
 
-    public static ItemStack getBarrier()
-    {
+    public static ItemStack getBarrier() {
         ItemStack output = new ItemStack(Material.BARRIER);
         ItemMeta meta = output.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(" ");
         meta.setLore(new ArrayList<>());
         output.setItemMeta(meta);
         return output;
     }
 
-    public static ItemStack getPlayerInfoItem(String player)
-    {
+    public static ItemStack getPlayerInfoItem(String player) {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(" ");
         lore.add(Utils.color("&fNume&f: &b" + player));
@@ -77,8 +71,7 @@ public class ItemsInit {
         return new ItemBuilder(Material.PLAYER_HEAD).setDisplayName(Utils.color("&e&lProfilul tau")).setHead(player).setLore(lore).build();
     }
 
-    public static ItemStack getTopPlayerHead(String player, int top)
-    {
+    public static ItemStack getTopPlayerHead(String player, int top) {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(" ");
         lore.add(Utils.color("&fXP&f: &b" + (int)Gwlevels.getXP(player)));
@@ -88,15 +81,14 @@ public class ItemsInit {
         return new ItemBuilder(Material.PLAYER_HEAD).setDisplayName(Utils.color("&b&l#" + top + " &e&l" + player)).setHead(player).setLore(lore).build();
     }
 
-    public static ItemStack getHelp1(Player player)
-    {
-        double baseMob = Gwlevels.getPlugin().getConfig().getDouble("mob-kill-xp");
-        double basePlayer = Gwlevels.getPlugin().getConfig().getDouble("player-kill-xp");
-        double baseMultiplier = Gwlevels.getPlugin().getConfig().getDouble("muliplier");
+    public static ItemStack getHelp1(Player player) {
+        double baseMob = Gwlevels.INSTANCE.getConfig().getDouble("mob-kill-xp");
+        double basePlayer = Gwlevels.INSTANCE.getConfig().getDouble("player-kill-xp");
+        double baseMultiplier = Gwlevels.INSTANCE.getConfig().getDouble("muliplier");
         double rankMultiplier = 1;
 
         if (player.hasPermission("gw.xp.vip"))
-            rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
+            rankMultiplier = Gwlevels.INSTANCE.getConfig().getDouble("rank-multiplier");
 
         ArrayList<String> lore = new ArrayList<>();
         lore.add(" ");
@@ -107,8 +99,7 @@ public class ItemsInit {
         return new ItemBuilder( Material.PLAYER_HEAD ).setDisplayName(Utils.color("&e&lCum fac rost de XP?")).setProfileHeader( "2d8a0728-9257-4072-bd83-6b60837d77af", "ewogICJ0aW1lc3RhbXAiIDogMTYxMDk5NzQ2MjIxMywKICAicHJvZmlsZUlkIiA6ICI5OTdjZjFlMmY1NGQ0YzEyOWY2ZjU5ZTVlNjU1YjZmNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJpbzEyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzMyNTUzMjdkZDhlOTBhZmFkNjgxYTE5MjMxNjY1YmVhMmJkMDYwNjVhMDlkNzdhYzE0MDg4MzdmOWUwYjI0MiIKICAgIH0KICB9Cn0=", "l/29ED2td3BNajIvF48AKX2ZKCfe43lfkaGKE+vbQbFs9v2ttPFvCprrkJniBniTIndHIoD06xyVl+oV4BYqRRmgKglRMJQKEJOMYqHbbbs5u+1bZBdbKNr+hVawaaci1IjRRkShRdzjrtoEiG1lNArmibvGQWgpSp8/p/HagiHvzGkJbZ7tmb0mCLn/CFez7ueNCbyBKafRkEFSeHP7Y/qDcfBNPO40Ez0si4fZsflseFAN3jD1ctc66eoSD6RxYKqtOJudWc+Rd9KwNELxWp+Eq4sqZuNJh6D0O8/VExpto2rvdLFbr2LYJqa120JKr+S0qlv0jWtV5F8/n2KQyKiJMGWssWXhqJn9um/uf53Y3+Y2ImU3EjCRKhVFPMc7bD1vij11lxvjbkPgxIgQoon4wxMVQqaawBGxmOIJdJ1uE+nUOxgiFoD2OfMwPalm6dDm90lpx8H0lb5da7CRVkIbO2psp9Zy0mq3vvZ+Rmo4HpZ9SKmUUbqkB/ROo/yxt2rR5ScN5bDtmKLv1B08QuekMRE2/Z1i/tRCZrtinWHwZ0HP3JRlra10gzWZox90ucS5b62lFitIXzAJQPySFPbaKCHXyvo5U5TGq/bsDPTNI7HEdYGLGxVZ0fPCuGC2tJyMPMxx/iGzmyfaZjEARZr9eFnYOa/JhtdjBCK+NM8=" ).setLore(lore).build();
     }
 
-    public static ItemStack getHelp2()
-    {
+    public static ItemStack getHelp2() {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(" ");
         lore.add(Utils.color("&fXP-ul este folosit automat pentru a primit rankup. Folosing comanda /level"));
@@ -117,8 +108,7 @@ public class ItemsInit {
         return new ItemBuilder( Material.PLAYER_HEAD ).setDisplayName(Utils.color("&e&lCum folosesc XP-ul?")).setProfileHeader( "2d8a0728-9257-4072-bd83-6b60837d77af", "ewogICJ0aW1lc3RhbXAiIDogMTYxMDk5Nzk1OTQyOCwKICAicHJvZmlsZUlkIiA6ICI1NjY3NWIyMjMyZjA0ZWUwODkxNzllOWM5MjA2Y2ZlOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGVJbmRyYSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9mZWUxNDM5MWIxNTgwZTBkY2VhZmYzMzc0ZThjNzg4MTIxYjFhNjE4YjgyZjI0YzU5MDgwMmY2NGI4MzllNDczIgogICAgfQogIH0KfQ==", "cmRfNEDktmQM+n0+DdX200Q51taDHSgQqz67idNAAhU1Gj+OKedZJ2y+TDVp00xWRj5Hjv94JZbMQ8BbgRwRE/Igy+ljqjfjWLDZP/81orn0G2QY94bXihkNnmh8O+kzbKTvXMumGrg4nb61IaAYXsLInBffs2aR3wuabniG5zzcbtiey9ZN8ZchQCj3QmHerBuqtzLXUPQb92ZFD6u27O3/QyORHWX2Nw2LW/rJLaGlB9AqMEV/FlnSfIPVsTM7kpPOuBSdT5RgYjwsaSCqR9NdrvLvkN6hfV3jRiiA7QZsejRcOw9hN1lYhO5GMzv33sZSrlaWXPhVjAYbCZz2L9HoQxJoIST4h2ZwaYL3H900/MZlPkhN0EkKiU0IjXJl7x81R8oLm8HONI+vPoQBhC5WPej6Fxpwnl89oStuZt0l6BBgTJQ7FBTRMab/QOFt+15P88e6fywMT4jxKNxio4rkSs1PhdVb9nxE12Qyf4/q1e7F8WBsG4nBHagPD9kY2zBbJ7f/J7cnuktpNmqZOAykWQ3UhyaitBBiNsZ3dq4BLqpiAP3rKykzpz1ETOrTwIOH6mS6u4+R0t/mgFVSAiMFG2ds6XMosrxOCDX1m3S7XpWyirHDvAW8eftidpKkoiV6KuUkZE44UQEKfpnW4xFkXW3kyfg6JCLqXO4NCqg=" ).setLore(lore).build();
     }
 
-    public static ItemStack getHelp3()
-    {
+    public static ItemStack getHelp3() {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(" ");
         lore.add(Utils.color("&cIN CURAND"));

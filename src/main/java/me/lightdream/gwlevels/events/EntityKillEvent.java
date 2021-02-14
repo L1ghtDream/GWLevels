@@ -19,32 +19,27 @@ public class EntityKillEvent implements Listener {
 
                 Player killer = event.getEntity().getKiller().getPlayer();
 
-                double base = Gwlevels.getPlugin().getConfig().getDouble("mob-kill-xp");
-                double baseMultiplier = Gwlevels.getPlugin().getConfig().getDouble("muliplier");
+                double base = Gwlevels.INSTANCE.getConfig().getDouble("mob-kill-xp");
+                double baseMultiplier = Gwlevels.INSTANCE.getConfig().getDouble("muliplier");
                 double rankMultiplier = 1;
 
                 if (killer.hasPermission("gw.xp.vip"))
-                    rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
+                    rankMultiplier = Gwlevels.INSTANCE.getConfig().getDouble("rank-multiplier");
 
                 Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
             }
-
             else if (event.getEntity() instanceof Player)
             {
                 Player killer = event.getEntity().getKiller().getPlayer();
 
-                double base = Gwlevels.getPlugin().getConfig().getDouble("player-kill-xp");
-                double baseMultiplier = Gwlevels.getPlugin().getConfig().getDouble("muliplier");
+                double base = Gwlevels.INSTANCE.getConfig().getDouble("player-kill-xp");
+                double baseMultiplier = Gwlevels.INSTANCE.getConfig().getDouble("muliplier");
                 double rankMultiplier = 1;
 
                 if (killer.hasPermission("gw.xp.vip"))
-                    rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
+                    rankMultiplier = Gwlevels.INSTANCE.getConfig().getDouble("rank-multiplier");
 
                 Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
-
-
-
-
             }
         }
 

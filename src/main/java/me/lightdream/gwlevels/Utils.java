@@ -13,17 +13,26 @@ import java.util.List;
 
 public class Utils {
 
-    public static String color(String str)
-    {
+    /**
+     * Converts to minecraft color coding
+     * @param str String you want to encode
+     * @return Encoded String
+     */
+    public static String color(String str) {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 
-    public static void save(HashMap<String, ?> cache, String location){
+    /**
+     * Saves the data into a file located at a location given
+     * @param data Data you want to save
+     * @param location Location you want to save into
+     */
+    public static void save(HashMap<String, ?> data, String location){
 
-        Object[] keys = cache.keySet().toArray();
-        ArrayList<String> data = new ArrayList<>();
+        Object[] keys = data.keySet().toArray();
+        ArrayList<String> setData = new ArrayList<>();
         for(Object key : keys)
-            data.add(key.toString() + " " + cache.get(key).toString());
+            setData.add(key.toString() + " " + data.get(key).toString());
 
         File file = new File(Bukkit.getServer().getPluginManager().getPlugin("Gwlevels").getDataFolder(),  location + ".yml");
         FileConfiguration minecraft = YamlConfiguration.loadConfiguration(file);
@@ -35,7 +44,7 @@ public class Utils {
             }
         }
 
-        minecraft.set("data", data);
+        minecraft.set("data", setData);
         System.out.println("Data has beed saved");
 
         try {
@@ -45,6 +54,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Saves the data into a file located at a location given
+     * @param location
+     * @return
+     */
     public static HashMap<String, String> load(String location){
         List<String> output = new ArrayList<>();
         HashMap<String, String> data = new HashMap<>();
