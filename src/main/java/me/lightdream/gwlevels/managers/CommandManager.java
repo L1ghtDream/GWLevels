@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -21,6 +22,7 @@ public class CommandManager implements CommandExecutor {
         if(label.equalsIgnoreCase("dev-main")) {
             Player player = (Player) sender;
             sender.sendMessage(Gwlevels.VERSION);
+            System.out.println(Gwlevels.getXP("_LightDream"));
         }
         else if(label.equalsIgnoreCase("gwadmin")) {
             if(sender.hasPermission("gw.admin"))
@@ -35,7 +37,11 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                Gwlevels.setLevel(args[1], Integer.parseInt(args[2]));
+                                new BukkitRunnable() {
+                                    @Override public void run() {
+                                        Gwlevels.setLevel(args[1], Integer.parseInt(args[2]));
+                                    }
+                                }.runTaskAsynchronously(Gwlevels.getPlugin());
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());
@@ -52,7 +58,12 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                Gwlevels.addLevel(args[1], Integer.parseInt(args[2]));
+                                new BukkitRunnable() {
+                                    @Override public void run() {
+                                        Gwlevels.addLevel(args[1], Integer.parseInt(args[2]));
+                                    }
+                                }.runTaskAsynchronously(Gwlevels.getPlugin());
+
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());
@@ -68,7 +79,13 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                Gwlevels.setXP(args[1], Integer.parseInt(args[2]));
+                                new BukkitRunnable() {
+                                    @Override public void run() {
+                                        Gwlevels.setXP(args[1], Integer.parseInt(args[2]));
+                                    }
+                                }.runTaskAsynchronously(Gwlevels.getPlugin());
+
+
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());
@@ -84,7 +101,12 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                Gwlevels.addXP(args[1], Integer.parseInt(args[2]));
+                                new BukkitRunnable() {
+                                    @Override public void run() {
+                                        Gwlevels.addXP(args[1], Integer.parseInt(args[2]));
+                                    }
+                                }.runTaskAsynchronously(Gwlevels.getPlugin());
+
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());

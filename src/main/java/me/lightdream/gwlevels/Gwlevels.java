@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -420,6 +421,9 @@ public final class Gwlevels extends JavaPlugin {
             if (rs.next())
             {
                 int lastLevel = (int)Math.floor(getLevel(player));
+
+
+
                 if (rs.getInt("COUNT(*)") == 1)
                     st = DatabaseConnector.con.prepareStatement("UPDATE " + DatabaseConnector.levels + " SET XP='" + XP + "' WHERE NAME='" + player + "'");
                 else
@@ -444,18 +448,26 @@ public final class Gwlevels extends JavaPlugin {
 
     public static double getXP(String player) throws NoUserFound
     {
-        try {
-            double XP = 0;
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT XP FROM " + DatabaseConnector.levels + " WHERE NAME = '" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                XP = rs.getDouble("XP");
-            }
-            return XP;
+        final double[] output = new double[1];
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    double XP = 0;
+                    PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT XP FROM " + DatabaseConnector.levels + " WHERE NAME = '" + player + "'");
+                    ResultSet rs = st.executeQuery();
+                    if (rs.next()) {
+                        XP = rs.getDouble("XP");
+                    }
+                    output[0] = XP;
 
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
+                } catch (SQLException e) {
+                    throw new NoUserFound();
+                }
+            }
+        }.runTaskAsynchronously(plugin);
+
+        return output[0];
     }
 
     public static double getXP(int level)
