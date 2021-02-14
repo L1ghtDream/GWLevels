@@ -8,7 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -37,11 +36,8 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                new BukkitRunnable() {
-                                    @Override public void run() {
-                                        Gwlevels.setLevel(args[1], Integer.parseInt(args[2]));
-                                    }
-                                }.runTaskAsynchronously(Gwlevels.getPlugin());
+                                Gwlevels.setLevel(args[1], Integer.parseInt(args[2]));
+
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());
@@ -58,12 +54,7 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                new BukkitRunnable() {
-                                    @Override public void run() {
-                                        Gwlevels.addLevel(args[1], Integer.parseInt(args[2]));
-                                    }
-                                }.runTaskAsynchronously(Gwlevels.getPlugin());
-
+                                Gwlevels.addLevel(args[1], Integer.parseInt(args[2]));
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());
@@ -79,13 +70,7 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                new BukkitRunnable() {
-                                    @Override public void run() {
-                                        Gwlevels.setXP(args[1], Integer.parseInt(args[2]));
-                                    }
-                                }.runTaskAsynchronously(Gwlevels.getPlugin());
-
-
+                                Gwlevels.setXP(args[1], Integer.parseInt(args[2]));
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());
@@ -101,12 +86,7 @@ public class CommandManager implements CommandExecutor {
                         if(args.length==3)
                         {
                             try {
-                                new BukkitRunnable() {
-                                    @Override public void run() {
-                                        Gwlevels.addXP(args[1], Integer.parseInt(args[2]));
-                                    }
-                                }.runTaskAsynchronously(Gwlevels.getPlugin());
-
+                                Gwlevels.addXP(args[1], Integer.parseInt(args[2]));
                             }
                             catch (NoUserFound e) {
                                 sender.sendMessage(e.getMessage());

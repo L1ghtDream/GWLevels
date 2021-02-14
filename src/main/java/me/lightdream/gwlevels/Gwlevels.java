@@ -16,15 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public final class Gwlevels extends JavaPlugin {
@@ -80,18 +73,19 @@ public final class Gwlevels extends JavaPlugin {
             /*48*/Arrays.asList("&7 1x Ancient Debris", "give %player_name% ancient_debris 1"),
             /*49*/Arrays.asList("&7 1x Netherite Chestplate", "give %player_name% netherite_chestplate 1"),
             /*50*/Arrays.asList("&7 5x Diamond Block", "give %player_name% diamond_block 5"),
-            //TODO: Continue de refactor
-            /*51*/Arrays.asList("&7 64 Block de carbuni ", "give %player_name% coal_block 64"),
-            /*52*/Arrays.asList("&7 Jumate stack Block de gold", "give %player_name% gold_block 32"),
-            /*53*/Arrays.asList("&7 1 conduit", "give %player_name% Conduit 1"),
-            /*54*/Arrays.asList("&7 32 obsidian", "give %player_name% Obsidian 32"),
-            /*55*/Arrays.asList("&7 20 Blockuri de iron si 20k ", "give %player_name% Iron_block 20|eco give %player_name% 20000"),
-            /*56*/Arrays.asList("&7 Spawn egg de villager", "give %player_name% Villager_spawn_egg 1"),
-            /*57*/Arrays.asList("&7 Oua de testoasa", "give %player_name% turtle_egg 10"),
+            //TODO: Continue refactor
+            /*51*/Arrays.asList("&7 64x Coal Block", "give %player_name% coal_block 64"),
+            /*52*/Arrays.asList("&7 32x Gold Block", "give %player_name% gold_block 32"),
+            /*53*/Arrays.asList("&7 1x Conduit", "give %player_name% Conduit 1"),
+            /*54*/Arrays.asList("&7 32x Obsidian", "give %player_name% Obsidian 32"),
+            /*55*/Arrays.asList("&7 20x IronBlock %newline%&720k", "give %player_name% Iron_block 20|eco give %player_name% 20000"),
+            /*56*/Arrays.asList("&7 1x Villager Spawn Egg", "give %player_name% Villager_spawn_egg 1"),
+            /*57*/Arrays.asList("&7 10x Turtle egg", "give %player_name% turtle_egg 10"),
             /*58*/Arrays.asList("&7 40k", "eco give %player_name% 40000"),
-            /*59*/Arrays.asList("&7 XP bottles", "give %player_name% Experience_bottle 64"),
-            /*60*/Arrays.asList("&7 1 beacon", "give %player_name% Beacon 1"),
-            /*61*/Arrays.asList("&7 1 stack de blockuri de gold", "give %player_name% gold_block 64"),
+            /*59*/Arrays.asList("&7 64x XP bottles", "give %player_name% Experience_bottle 64"),
+            /*60*/Arrays.asList("&7 1x Beacon", "give %player_name% Beacon 1"),
+            /*61*/Arrays.asList("&7 64x Gold Blocks", "give %player_name% gold_block 64"),
+            //TODO: Continue refactor
             /*62*/Arrays.asList("&7 Un stack de blockuri de gold", "give %player_name% gold_block 64"),
             /*63*/Arrays.asList("&7 Mere de aur", "give %player_name% golden_apple 15"),
             /*64*/Arrays.asList("&7 64 de morcovi de aur", "give %player_name% golden_carrot 64"),
@@ -130,7 +124,7 @@ public final class Gwlevels extends JavaPlugin {
             /*97*/Arrays.asList("&7 32 Notch apples", "give %player_name% enchanted_golden_apple 32"),
             /*98*/Arrays.asList("&7 200k", "eco give %player_name% 200000"),
             /*99*/Arrays.asList("&7 96 Diamond block", "give %player_name% diamond_block 96"),
-            /*100*/Arrays.asList("& 764 Nothch Applse", "give %player_name% enchanted_golden_apple 64")
+            /*100*/Arrays.asList("&7 64 Nothch Applse", "give %player_name% enchanted_golden_apple 64")
     );
 
 
@@ -157,6 +151,9 @@ public final class Gwlevels extends JavaPlugin {
     public static NamespacedKey backKey;
     public static NamespacedKey helpKey;
     public static NamespacedKey viewTopKey;
+
+    private static HashMap<String, Double> dataLevel = new HashMap<>();
+    private static HashMap<String, String> dataClaimed = new HashMap<>();
 
 
 
@@ -199,17 +196,22 @@ public final class Gwlevels extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("gwtop")).setExecutor(new CommandManager());
 
         DataHolder.updateData();
+
+        HashMap<String, String> var1 = Utils.load("level");
+
+        for(String s : var1.keySet())
+            dataLevel.put(s, Double.valueOf(var1.get(s)));
+
+        dataClaimed = Utils.load("claimed");
     }
 
     @Override
     public void onDisable() {
         this.saveDefaultConfig();
+
+        Utils.save(dataLevel, "level");
+        Utils.save(dataClaimed, "claimed");
     }
-
-
-    // ------------------------------ SETUP ------------------------------
-
-
 
     // ------------------------------ Getters ------------------------------
 
@@ -220,7 +222,7 @@ public final class Gwlevels extends JavaPlugin {
         {
             Inventory levelInv = player.getOpenInventory().getTopInventory();
 
-            char[] data = getClaimedData(player.getName());
+            char[] data = getClaimedData(player.getName()).toCharArray();
 
             for(int pos : levelInv_levelSlots)
                 levelInv.setItem(pos, null);
@@ -262,7 +264,7 @@ public final class Gwlevels extends JavaPlugin {
         if(page <= 6 && page >= 0)
         {
             Inventory levelInv = Bukkit.createInventory(null, 54, "Level");
-            char[] data = getClaimedData(player.getName());
+            char[] data = getClaimedData(player.getName()).toCharArray();
 
             for(int i : levelInv_color1)
                 levelInv.setItem(i, ItemsInit.getPaneColor1());
@@ -384,7 +386,9 @@ public final class Gwlevels extends JavaPlugin {
     }
 
 
-    // ------------------------------ Database OPS ------------------------------
+    // ------------------------------ Database / Files OPS ------------------------------
+
+    //TODO: Move to file storage
 
     //Level
     public static void setLevel (String player, int level) throws NoUserFound
@@ -415,30 +419,7 @@ public final class Gwlevels extends JavaPlugin {
     //XP
     public static void setXP(String player, double XP) throws NoUserFound
     {
-        try {
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.levels + " WHERE NAME = '" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next())
-            {
-                int lastLevel = (int)Math.floor(getLevel(player));
-
-
-
-                if (rs.getInt("COUNT(*)") == 1)
-                    st = DatabaseConnector.con.prepareStatement("UPDATE " + DatabaseConnector.levels + " SET XP='" + XP + "' WHERE NAME='" + player + "'");
-                else
-                    st = DatabaseConnector.con.prepareStatement("INSERT INTO " + DatabaseConnector.levels + " VALUES('" + player + "', '" + XP + "', '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000')");
-                st.executeUpdate();
-                int currLevel = (int)Math.floor(getLevel(player));
-                if(currLevel > lastLevel)
-                {
-                    Objects.requireNonNull(Bukkit.getPlayer(player)).sendMessage(Utils.color("&fFelicitari ai ajuns la nivelul &b" + currLevel));
-                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "title " + player + " title {\"text\":\"Level UP\", \"color\":\"yellow\"}");
-                }
-            }
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
+        dataLevel.put(player, XP);
     }
 
     public static void addXP(String player, double XP) throws NoUserFound
@@ -448,26 +429,7 @@ public final class Gwlevels extends JavaPlugin {
 
     public static double getXP(String player) throws NoUserFound
     {
-        final double[] output = new double[1];
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    double XP = 0;
-                    PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT XP FROM " + DatabaseConnector.levels + " WHERE NAME = '" + player + "'");
-                    ResultSet rs = st.executeQuery();
-                    if (rs.next()) {
-                        XP = rs.getDouble("XP");
-                    }
-                    output[0] = XP;
-
-                } catch (SQLException e) {
-                    throw new NoUserFound();
-                }
-            }
-        }.runTaskAsynchronously(plugin);
-
-        return output[0];
+        return dataLevel.getOrDefault(player, 0.0);
     }
 
     public static double getXP(int level)
@@ -480,48 +442,20 @@ public final class Gwlevels extends JavaPlugin {
 
 
     //Data
-    public static void setClaimedData(String player, char[] data)  throws NoUserFound
+    public static void setClaimedData(String player, String data)  throws NoUserFound
     {
-        try {
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT COUNT(*) FROM " + DatabaseConnector.levels + " WHERE NAME = '" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                if (rs.getInt("COUNT(*)") == 1)
-                    st = DatabaseConnector.con.prepareStatement("UPDATE " + DatabaseConnector.levels + " SET CLAIMED='" + new String(data) + "' WHERE NAME='" + player + "'");
-            }
-            st.executeUpdate();
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
+        dataClaimed.put(player, data);
     }
 
-    public static char[] getClaimedData(String player) throws NoUserFound
+    public static String getClaimedData(String player) throws NoUserFound
     {
-        try {
-            String str = "";
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT CLAIMED FROM " + DatabaseConnector.levels + " WHERE NAME = '" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next())
-                return rs.getString("CLAIMED").toCharArray();
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
-        return null;
+        return dataClaimed.getOrDefault(player, "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
     }
 
     public static ArrayList<String> getTopPlayers() throws NoUserFound
     {
-        try {
-            ArrayList<String> output = new ArrayList<String>();
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT NAME FROM levels ORDER BY XP DESC");
-            ResultSet rs = st.executeQuery();
-            for(int i=0;i<=10;i++)
-                if (rs.next())
-                    output.add(rs.getString("NAME"));
-            return output;
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
+        //TODO: Solve
+        return new ArrayList<>();
     }
 
     public static String getInfo (String player) throws NoUserFound
@@ -539,15 +473,8 @@ public final class Gwlevels extends JavaPlugin {
 
     public static int getRankLevel(String player) throws NoUserFound
     {
-        try {
-            PreparedStatement st = DatabaseConnector.con.prepareStatement("SELECT lvlTbl.ID FROM (SELECT NAME, XP, CONCAT(row_number() OVER(ORDER BY XP DESC)) AS \"ID\" FROM " + DatabaseConnector.levels +    ") as lvlTbl WHERE lvlTbl.NAME='" + player + "'");
-            ResultSet rs = st.executeQuery();
-            if (rs.next())
-                return rs.getInt("ID");
-            throw new NoUserFound();
-        } catch (SQLException e) {
-            throw new NoUserFound();
-        }
+        //TODO: Solve
+        return 0;
     }
 
 

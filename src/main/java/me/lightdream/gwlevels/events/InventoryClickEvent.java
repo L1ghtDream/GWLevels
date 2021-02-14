@@ -39,9 +39,9 @@ public class InventoryClickEvent  implements Listener {
                         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), PlaceholderAPI.setPlaceholders(player, command));
                     }
 
-                    char[] data = Gwlevels.getClaimedData(event.getWhoClicked().getName());
+                    char[] data = Gwlevels.getClaimedData(event.getWhoClicked().getName()).toCharArray();
                     data[level - 1] = '1';
-                    Gwlevels.setClaimedData(event.getWhoClicked().getName(), data);
+                    Gwlevels.setClaimedData(event.getWhoClicked().getName(), String.valueOf(data));
                     event.getInventory().setItem(Gwlevels.levelInv_levelSlots.get(level - 1 - page * 15), ItemsInit.getLevelRewardClaimed(Utils.color("&b&lLevel &e" + level), level - 1));
                 } else {
                     event.getWhoClicked().sendMessage("Nu ai nivelul necesar pentru a lua aceasta recompensa");

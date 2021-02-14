@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class EntityKillEvent implements Listener {
 
@@ -27,14 +26,7 @@ public class EntityKillEvent implements Listener {
                 if (killer.hasPermission("gw.xp.vip"))
                     rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
 
-                double finalRankMultiplier = rankMultiplier;
-                new BukkitRunnable() {
-                    @Override public void run() {
-                        Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * finalRankMultiplier);
-                    }
-                }.runTaskAsynchronously(Gwlevels.getPlugin());
-
-
+                Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
             }
 
             else if (event.getEntity() instanceof Player)
@@ -48,12 +40,8 @@ public class EntityKillEvent implements Listener {
                 if (killer.hasPermission("gw.xp.vip"))
                     rankMultiplier = Gwlevels.getPlugin().getConfig().getDouble("rank-multiplier");
 
-                double finalRankMultiplier = rankMultiplier;
-                new BukkitRunnable() {
-                    @Override public void run() {
-                        Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * finalRankMultiplier);
-                    }
-                }.runTaskAsynchronously(Gwlevels.getPlugin());
+                Gwlevels.addXP(event.getEntity().getKiller().getPlayer().getName(), base * baseMultiplier * rankMultiplier);
+
 
 
 
